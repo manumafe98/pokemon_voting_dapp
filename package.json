@@ -1,0 +1,25 @@
+{
+  "name": "pokemon_voting_dapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "hardhat:test": "cd contracts && npx hardhat test",
+    "hardhat:compile": "cd contracts && npx hardhat compile",
+    "hardhat:node": "cd contracts && npx hardhat node",
+    "hardhat:clean": "cd contracts && npx hardhat clean",
+    "hardhat:typechain": "cd contracts && npx hardhat typechain",
+    "hardhat:deploy": "cd contracts && npx hardhat ignition deploy --reset ignition/modules/HoytsX.ts --network localhost",
+    "frontend:dev": "cd frontend && npm run dev",
+    "frontend:build": "cd frontend && npm run build",
+    "prettier:check": "npx prettier . --check",
+    "prettier:fix": "npx prettier . --write"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "3.5.3",
+    "prettier-plugin-organize-imports": "^4.1.0"
+  }
+}
