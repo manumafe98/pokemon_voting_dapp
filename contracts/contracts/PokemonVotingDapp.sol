@@ -12,6 +12,7 @@ contract PokemonVotingDapp {
         string image;
         string ipfs;
         uint256 votes;
+        address[] pokemonVoters;
     }
 
     struct Voter {
@@ -29,7 +30,8 @@ contract PokemonVotingDapp {
         string name,
         string image,
         string ipfs,
-        uint256 votes
+        uint256 votes,
+        address[] pokemonVoters
     );
 
     event RegisterVoter(
@@ -65,7 +67,7 @@ contract PokemonVotingDapp {
         pokemon.ipfs = _ipfs;
         pokemon.votes = 0;
 
-        emit CreatePokemon(totalPokemons, _name, _image, _ipfs, pokemon.votes);
+        emit CreatePokemon(totalPokemons, _name, _image, _ipfs, pokemon.votes, pokemon.pokemonVoters);
     }
 
     function getPokemonById(uint256 _id) public view returns(Pokemon memory) {
@@ -92,5 +94,20 @@ contract PokemonVotingDapp {
 
     function getVoterByAddress(address _address) public view returns(Voter memory) {
         return voters[_address];
+    }
+
+    function votePokemon(uint256 _id) public {
+        Voter storage voter = voters[msg.sender];
+
+        require(isRegistered[msg.sender], "To vote you have to be registered");
+        require(voter.isAllowedToVote, "You already voted");
+
+        Pokemon storage pokemon = pokemons[_id];
+        pokemon.votes += 1;
+        pokemon.pokemonVoters.push(msg.sender);
+
+        voter.hasVoted = true;
+        voter.isAllowedToVote = false;
+        voter.vote = _id;
     }
 }
