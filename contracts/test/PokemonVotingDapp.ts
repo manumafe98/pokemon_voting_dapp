@@ -126,19 +126,21 @@ describe("PokemonVotingDapp", () => {
       expect(voter.hasVoted).to.equal(true);
       expect(voter.isAllowedToVote).to.equal(false);
       expect(voter.vote).to.equal(1);
-    })
+    });
 
     it("User try to vote again", async () => {
       expect(pokemonVotingDapp.connect(buyer).votePokemon(1)).to.revertedWith(
         "You already voted",
       );
-    })
+    });
 
     it("Test other voter", async () => {
       const registerDeployer = await pokemonVotingDapp
         .connect(deployer)
         .registerVoter(deployer, VOTER_NAME, VOTER_IMAGE, VOTER_IPFS);
-      const otherUserTransaction = await pokemonVotingDapp.connect(deployer).votePokemon(1);
+      const otherUserTransaction = await pokemonVotingDapp
+        .connect(deployer)
+        .votePokemon(1);
 
       await registerDeployer.wait();
       await otherUserTransaction.wait();
@@ -147,6 +149,6 @@ describe("PokemonVotingDapp", () => {
 
       expect(pokemon.votes).to.equal(2);
       expect(pokemon.pokemonVoters.length).to.equal(2);
-    })
+    });
   });
 });
