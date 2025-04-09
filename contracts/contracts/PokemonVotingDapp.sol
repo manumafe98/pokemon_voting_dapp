@@ -57,7 +57,7 @@ contract PokemonVotingDapp {
         owner = msg.sender;
     }
 
-    function createPokemon(string memory _name, string memory _image, string memory _ipfs) public onlyOwner {
+    function createPokemon(string memory _name, string memory _image, string memory _ipfs) external onlyOwner {
         totalPokemons += 1;
 
         Pokemon storage pokemon = pokemons[totalPokemons];
@@ -96,7 +96,7 @@ contract PokemonVotingDapp {
         return voters[_address];
     }
 
-    function votePokemon(uint256 _id) public {
+    function votePokemon(uint256 _id) external {
         Voter storage voter = voters[msg.sender];
 
         require(isRegistered[msg.sender], "To vote you have to be registered");
