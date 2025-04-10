@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { Button } from "./Button";
 
 export const NavBar = () => {
   const navigate = useNavigate();
@@ -30,9 +31,7 @@ export const NavBar = () => {
         </li>
       </ul>
       <div className="flex justify-end w-96">
-        <button className="border-1 border-solid border-white bg-primary hover:bg-light-primary p-4">
-          Connect Wallet
-        </button>
+        <Button text="Connect Wallet" customStyles="p-4" onClick={() => {}} />
       </div>
     </div>
   );

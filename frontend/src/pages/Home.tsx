@@ -4,6 +4,7 @@ import hoOh from "@/assets/images/ho-oh.webp";
 import lugia from "@/assets/images/lugia.webp";
 import mew from "@/assets/images/mew.webp";
 import rayquaza from "@/assets/images/rayquaza.webp";
+import { Button } from "@/components/Button";
 import { Layout } from "@/components/Layout";
 
 export const Home = () => {
@@ -62,9 +63,7 @@ export const Home = () => {
                   <span>{pokemon.votes}</span>
                 </div>
                 <div className="h-10 w-px bg-gray-600 mx-4 my-1" />
-                <button className="bg-primary border-1 border-solid border-white px-8 hover:bg-light-primary cursor-pointer">
-                  Vote
-                </button>
+                <Button text="Vote" customStyles="px-8" onClick={() => {}} />
               </div>
             </div>
           </div>
