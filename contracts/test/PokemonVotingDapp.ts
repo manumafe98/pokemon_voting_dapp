@@ -4,12 +4,10 @@ import hre from "hardhat";
 import { PokemonVotingDapp } from "../typechain-types";
 
 const POKEMON_NAME = "Lugia";
-const POKEMON_IMAGE = "https://lugia.image.example";
-const POKEMON_IPFS = "abcd";
+const POKEMON_IPFS_HASH = "abcd";
 
 const VOTER_NAME = "Manumafe";
-const VOTER_IMAGE = "https://profile.manumafe.image";
-const VOTER_IPFS = "efgjk";
+const VOTER_IPFS_HASH = "efgjk";
 
 describe("PokemonVotingDapp", () => {
   let pokemonVotingDapp: PokemonVotingDapp;
@@ -37,7 +35,7 @@ describe("PokemonVotingDapp", () => {
     beforeEach(async () => {
       pokemonTransaction = await pokemonVotingDapp
         .connect(deployer)
-        .createPokemon(POKEMON_NAME, POKEMON_IMAGE, POKEMON_IPFS);
+        .createPokemon(POKEMON_NAME, POKEMON_IPFS_HASH);
 
       await pokemonTransaction.wait();
     });
@@ -46,8 +44,7 @@ describe("PokemonVotingDapp", () => {
       const pokemon = await pokemonVotingDapp.getPokemonById(1);
       expect(pokemon.id).to.equal(1);
       expect(pokemon.name).to.equal(POKEMON_NAME);
-      expect(pokemon.image).to.equal(POKEMON_IMAGE);
-      expect(pokemon.ipfs).to.equal(POKEMON_IPFS);
+      expect(pokemon.ipfsHash).to.equal(POKEMON_IPFS_HASH);
       expect(pokemon.pokemonVoters).to.deep.equal([]);
     });
 
@@ -65,7 +62,7 @@ describe("PokemonVotingDapp", () => {
     beforeEach(async () => {
       const voterTransaction = await pokemonVotingDapp
         .connect(buyer)
-        .registerVoter(buyer, VOTER_NAME, VOTER_IMAGE, VOTER_IPFS);
+        .registerVoter(buyer, VOTER_NAME, VOTER_IPFS_HASH);
 
       await voterTransaction.wait();
     });
@@ -74,14 +71,14 @@ describe("PokemonVotingDapp", () => {
       const voter = await pokemonVotingDapp.getVoterByAddress(buyer);
       expect(voter._address).to.equal(buyer);
       expect(voter.name).to.equal(VOTER_NAME);
-      expect(voter.image).to.equal(VOTER_IMAGE);
+      expect(voter.ipfsHash).to.equal(VOTER_IPFS_HASH);
     });
 
     it("Test re register fails", async () => {
       await expect(
         pokemonVotingDapp
           .connect(buyer)
-          .registerVoter(buyer, VOTER_NAME, VOTER_IMAGE, VOTER_IPFS),
+          .registerVoter(buyer, VOTER_NAME, VOTER_IPFS_HASH),
       ).to.revertedWith("Voter already registered");
     });
 
@@ -90,7 +87,7 @@ describe("PokemonVotingDapp", () => {
       expect(
         pokemonVotingDapp
           .connect(buyer)
-          .registerVoter(randomWallet, VOTER_NAME, VOTER_IMAGE, VOTER_IPFS),
+          .registerVoter(randomWallet, VOTER_NAME, VOTER_IPFS_HASH),
       ).to.revertedWith("Please registered a wallet you own");
     });
   });
@@ -101,7 +98,7 @@ describe("PokemonVotingDapp", () => {
 
       const voterTransaction = await pokemonVotingDapp
         .connect(buyer)
-        .registerVoter(buyer, VOTER_NAME, VOTER_IMAGE, VOTER_IPFS);
+        .registerVoter(buyer, VOTER_NAME, VOTER_IPFS_HASH);
 
       const voteTransaction = await pokemonVotingDapp
         .connect(buyer)
@@ -137,7 +134,7 @@ describe("PokemonVotingDapp", () => {
     it("Test other voter", async () => {
       const registerDeployer = await pokemonVotingDapp
         .connect(deployer)
-        .registerVoter(deployer, VOTER_NAME, VOTER_IMAGE, VOTER_IPFS);
+        .registerVoter(deployer, VOTER_NAME, VOTER_IPFS_HASH);
       const otherUserTransaction = await pokemonVotingDapp
         .connect(deployer)
         .votePokemon(1);

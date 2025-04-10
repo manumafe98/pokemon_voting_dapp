@@ -10,7 +10,7 @@ contract PokemonVotingDapp {
         uint256 id;
         string name;
         string image;
-        string ipfs;
+        string ipfsHash;
         uint256 votes;
         address[] pokemonVoters;
     }
@@ -19,7 +19,7 @@ contract PokemonVotingDapp {
         address _address;
         string name;
         string image;
-        string ipfs;
+        string ipfsHash;
         bool isAllowedToVote;
         bool hasVoted;
         uint256 vote;
@@ -28,8 +28,7 @@ contract PokemonVotingDapp {
     event CreatePokemon(
         uint256 indexed id,
         string name,
-        string image,
-        string ipfs,
+        string ipfsHash,
         uint256 votes,
         address[] pokemonVoters
     );
@@ -37,8 +36,7 @@ contract PokemonVotingDapp {
     event RegisterVoter(
         address indexed _address,
         string name,
-        string image,
-        string ipfs,
+        string ipfsHash,
         bool isAllowedToVote,
         bool hasVoted,
         uint256 vote
@@ -57,39 +55,37 @@ contract PokemonVotingDapp {
         owner = msg.sender;
     }
 
-    function createPokemon(string memory _name, string memory _image, string memory _ipfs) external onlyOwner {
+    function createPokemon(string memory _name, string memory _ipfsHash) external onlyOwner {
         totalPokemons += 1;
 
         Pokemon storage pokemon = pokemons[totalPokemons];
         pokemon.id = totalPokemons;
         pokemon.name = _name;
-        pokemon.image = _image;
-        pokemon.ipfs = _ipfs;
+        pokemon.ipfsHash = _ipfsHash;
         pokemon.votes = 0;
 
-        emit CreatePokemon(totalPokemons, _name, _image, _ipfs, pokemon.votes, pokemon.pokemonVoters);
+        emit CreatePokemon(totalPokemons, _name, _ipfsHash, pokemon.votes, pokemon.pokemonVoters);
     }
 
     function getPokemonById(uint256 _id) public view returns(Pokemon memory) {
         return pokemons[_id];
     }
 
-    function registerVoter(address _address, string memory _name, string memory _image, string memory _ipfs) external {
+    function registerVoter(address _address, string memory _name, string memory _ipfsHash) external {
         require(msg.sender == _address, "Please registered a wallet you own");
         require(!isRegistered[_address], "Voter already registered");
 
         Voter storage voter = voters[_address];
         voter._address = _address;
         voter.name = _name;
-        voter.image = _image;
-        voter.ipfs = _ipfs;
+        voter.ipfsHash = _ipfsHash;
         voter.isAllowedToVote = true;
         voter.hasVoted = false;
         voter.vote = 0;
 
         isRegistered[msg.sender] = true;
 
-        emit RegisterVoter(msg.sender, _name, _image, _ipfs, voter.isAllowedToVote, voter.hasVoted, voter.vote);
+        emit RegisterVoter(msg.sender, _name, _ipfsHash, voter.isAllowedToVote, voter.hasVoted, voter.vote);
     }
 
     function getVoterByAddress(address _address) public view returns(Voter memory) {
