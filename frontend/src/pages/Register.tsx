@@ -11,7 +11,12 @@ export const Register = () => {
         <ImageUploader />
         <Input label="Name" type="text" placeholder="John Doe" />
         <Input label="Address" type="text" placeholder="0x0000" />
-        <Button text="Register" customStyles="w-[75%] p-4" onClick={() => {}} />
+        <Button
+          text="Register"
+          type="submit"
+          customStyles="w-[75%] p-4"
+          onClick={() => {}}
+        />
       </Form>
     </Layout>
   );

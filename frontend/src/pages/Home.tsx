@@ -44,8 +44,11 @@ export const Home = () => {
   return (
     <Layout>
       <div className="grid grid-rows-2 grid-cols-3 place-items-center h-full p-10 gap-4 text-white">
-        {pokemonsTest.map((pokemon) => (
-          <div className="flex flex-col border-1 border-solid border-gray-600 h-10/12 w-80 group hover:border-white">
+        {pokemonsTest.map((pokemon, index) => (
+          <div
+            key={index}
+            className="flex flex-col border-1 border-solid border-gray-600 h-10/12 w-80 group hover:border-white"
+          >
             <div className="w-full h-4/5 overflow-hidden">
               <img
                 className="h-full w-full group-hover:scale-105 transition-transform duration-900"
@@ -63,7 +66,12 @@ export const Home = () => {
                   <span>{pokemon.votes}</span>
                 </div>
                 <div className="h-10 w-px bg-gray-600 mx-4 my-1" />
-                <Button text="Vote" customStyles="px-8" onClick={() => {}} />
+                <Button
+                  text="Vote"
+                  type="button"
+                  customStyles="px-8"
+                  onClick={() => {}}
+                />
               </div>
             </div>
           </div>
