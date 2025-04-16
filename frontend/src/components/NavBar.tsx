@@ -1,8 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "./Button";
+import { getSigner } from "@/hooks/getSigner";
+import { LoggedMenu } from "./LoggedMenu";
+import { useState } from "react";
 
 export const NavBar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+  const { connect, disconnect, isConnected, address } = getSigner();
 
   const navigateToPath = (path: string) => {
     navigate(path);
@@ -43,12 +48,19 @@ export const NavBar = () => {
         ))}
       </ul>
       <div className="flex justify-end w-96">
-        <Button
-          text="Connect Wallet"
-          type="button"
-          customStyles="p-4"
-          onClick={() => {}}
-        />
+        {isConnected ? (
+          <>
+            <div className="rounded-full w-18 h-18 bg-white border-1 border-solid border-white cursor-pointer p-4" onClick={() => setIsMenuOpen(true)} />
+            <LoggedMenu address={address as string} isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} disconnect={disconnect}/>
+          </>
+        ) : (
+          <Button
+            text="Connect Wallet"
+            type="button"
+            customStyles="p-4"
+            onClick={connect}
+          />
+        )}
       </div>
     </div>
   );

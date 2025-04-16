@@ -4,8 +4,6 @@ export const DownloadCloudIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="10em"
-      height="10em"
       viewBox="0 0 16 14"
       {...props}
     >
