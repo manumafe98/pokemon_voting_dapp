@@ -2,7 +2,11 @@ import { DownloadCloudIcon } from "@/assets/icons/DownloadCloudIcon";
 import { X } from "@/assets/icons/X";
 import { useRef, useState } from "react";
 
-export const ImageUploader = () => {
+interface ImageUploaderProps {
+  handleImageChange: (file: File | undefined) => void;
+}
+
+export const ImageUploader = ({ handleImageChange }: ImageUploaderProps) => {
   const [image, setImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [altText, setAltText] = useState<string>("");
@@ -24,6 +28,7 @@ export const ImageUploader = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     handleFile(file);
+    handleImageChange(file);
   };
 
   const removeImage = () => {

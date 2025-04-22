@@ -2,9 +2,10 @@ interface InputProps {
   label: string;
   type: string;
   placeholder: string;
+  handleChange: (label: string, event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const Input = ({ label, type, placeholder }: InputProps) => {
+export const Input = ({ label, type, placeholder, handleChange }: InputProps) => {
   return (
     <div className="flex flex-col w-[75%]">
       <label className="mb-0.5" htmlFor={label.toLowerCase()}>
@@ -16,6 +17,7 @@ export const Input = ({ label, type, placeholder }: InputProps) => {
         name={label.toLowerCase()}
         type={type}
         placeholder={placeholder}
+        onChange={(event) => handleChange(label, event)}
       />
     </div>
   );

@@ -2,7 +2,7 @@ interface ButtonProps {
   text: string;
   type: "button" | "submit";
   customStyles: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export const Button = ({ text, type, customStyles, onClick }: ButtonProps) => {
