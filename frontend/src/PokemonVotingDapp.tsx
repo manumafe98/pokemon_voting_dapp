@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
+import { Admin } from "./pages/Admin";
 import { Home } from "./pages/Home";
 import { Register } from "./pages/Register";
-import { Admin } from "./pages/Admin";
 
 export const PokemonVotingDapp = () => {
   return (

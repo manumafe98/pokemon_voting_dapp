@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-    --color-background: #010101;
-    --color-primary: #ff6b6b;
-    --color-light-primary: #ff9797;
+  --color-background: #010101;
+  --color-primary: #ff6b6b;
+  --color-light-primary: #ff9797;
 
-    --main-font: "IBM Plex Mono", monospace;
+  --main-font: "IBM Plex Mono", monospace;
 }
 
 body {
-    font-family: var(--main-font);
+  font-family: var(--main-font);
 }

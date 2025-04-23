@@ -10,7 +10,10 @@ export const Register = () => {
   const [address, setAddress] = useState<string>("");
   const [image, setImage] = useState<File | undefined>();
 
-  const handleChange = (label: string, event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    label: string,
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const { value } = event.target;
     if (label === "Name") {
       setName(value);
@@ -25,7 +28,7 @@ export const Register = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-  }
+  };
 
   return (
     <Layout>

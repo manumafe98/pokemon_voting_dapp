@@ -7,7 +7,8 @@ import path from "path";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   define: {
-    "import.meta.env.PINATA_JWT": JSON.stringify(process.env.PINATA_JWT)
+    "import.meta.env.PINATA_JWT": JSON.stringify(process.env.PINATA_JWT),
+    "import.meta.env.PINATA_GATEWAY": JSON.stringify(process.env.PINATA_GATEWAY)
   },
   resolve: {
     alias: {

@@ -1,6 +1,6 @@
+import { Copy } from "@/assets/icons/Copy";
 import { X } from "@/assets/icons/X";
 import { Button } from "./Button";
-import { Copy } from "@/assets/icons/Copy";
 
 interface LoggedMenuProps {
   address: string;

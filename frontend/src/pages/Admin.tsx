@@ -3,12 +3,16 @@ import { Form } from "@/components/Form";
 import { ImageUploader } from "@/components/ImageUploader";
 import { Input } from "@/components/Input";
 import { Layout } from "@/components/Layout";
+import { createPokemon } from "@/hooks/createPokemon";
+import { getSigner } from "@/hooks/getSigner";
 import { uploadToPinata } from "@/hooks/uploadToPinata";
+import { JsonRpcSigner } from "ethers";
 import { useState } from "react";
 
 export const Admin = () => {
   const [name, setName] = useState<string>("");
   const [image, setImage] = useState<File | undefined>();
+  const { signer } = getSigner();
 
   const handleChange = (
     _: string,
@@ -18,14 +22,14 @@ export const Admin = () => {
     setName(value);
   };
 
-    const handleImageChange = (file: File | undefined) => {
-      setImage(file);
+  const handleImageChange = (file: File | undefined) => {
+    setImage(file);
   };
-  
-  const handleSubmit = (event: React.FormEvent) => {
+
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const test = uploadToPinata(image as File);
-    console.log(test);
+    const cid = await uploadToPinata(image as File);
+    createPokemon(signer as JsonRpcSigner, name, cid);
   };
 
   return (

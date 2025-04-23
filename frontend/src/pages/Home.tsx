@@ -1,50 +1,24 @@
-import arceus from "@/assets/images/arceus.webp";
-import giratina from "@/assets/images/giratina.webp";
-import hoOh from "@/assets/images/ho-oh.webp";
-import lugia from "@/assets/images/lugia.webp";
-import mew from "@/assets/images/mew.webp";
-import rayquaza from "@/assets/images/rayquaza.webp";
 import { Button } from "@/components/Button";
 import { Layout } from "@/components/Layout";
+import { getPokemons } from "@/hooks/getPokemons";
+import { Pokemon } from "@/types/pokemon.type";
+import { useEffect, useState } from "react";
 
 export const Home = () => {
-  const pokemonsTest = [
-    {
-      name: "Lugia",
-      imageUrl: lugia,
-      votes: 100,
-    },
-    {
-      name: "Arceus",
-      imageUrl: arceus,
-      votes: 10,
-    },
-    {
-      name: "Giratina",
-      imageUrl: giratina,
-      votes: 20,
-    },
-    {
-      name: "Ho-oh",
-      imageUrl: hoOh,
-      votes: 15,
-    },
-    {
-      name: "Mew",
-      imageUrl: mew,
-      votes: 25,
-    },
-    {
-      name: "Rayquaza",
-      imageUrl: rayquaza,
-      votes: 35,
-    },
-  ];
+  const [pokemons, setPokemons] = useState<Pokemon[]>([]);
+
+  useEffect(() => {
+    const fetchPokemons = async () => {
+      const newPokemons = await getPokemons();
+      setPokemons(newPokemons);
+    };
+    fetchPokemons();
+  }, []);
 
   return (
     <Layout>
       <div className="grid grid-rows-2 grid-cols-3 place-items-center h-full p-10 gap-4 text-white">
-        {pokemonsTest.map((pokemon, index) => (
+        {pokemons.map((pokemon, index) => (
           <div
             key={index}
             className="flex flex-col border-1 border-solid border-gray-600 h-10/12 w-80 group hover:border-white"
@@ -52,7 +26,7 @@ export const Home = () => {
             <div className="w-full h-4/5 overflow-hidden">
               <img
                 className="h-full w-full group-hover:scale-105 transition-transform duration-900"
-                src={pokemon.imageUrl}
+                src={`${import.meta.env.PINATA_GATEWAY}/ipfs/${pokemon.ipfsHash}`}
                 alt={`${pokemon.name} image url`}
               />
             </div>

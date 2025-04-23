@@ -44,7 +44,7 @@ contract PokemonVotingDapp {
 
     mapping(uint256 => Pokemon) pokemons;
     mapping(address => Voter) voters;
-    mapping(address => bool) isRegistered;
+    mapping(address => bool) public isRegistered;
 
     modifier onlyOwner() {
         require(msg.sender == owner);
@@ -67,7 +67,7 @@ contract PokemonVotingDapp {
         emit CreatePokemon(totalPokemons, _name, _ipfsHash, pokemon.votes, pokemon.pokemonVoters);
     }
 
-    function getPokemonById(uint256 _id) public view returns(Pokemon memory) {
+    function getPokemonById(uint256 _id) external view returns(Pokemon memory) {
         return pokemons[_id];
     }
 
@@ -88,7 +88,7 @@ contract PokemonVotingDapp {
         emit RegisterVoter(msg.sender, _name, _ipfsHash, voter.isAllowedToVote, voter.hasVoted, voter.vote);
     }
 
-    function getVoterByAddress(address _address) public view returns(Voter memory) {
+    function getVoterByAddress(address _address) external view returns(Voter memory) {
         return voters[_address];
     }
 

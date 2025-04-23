@@ -1,3 +1,10 @@
+interface PinataResponse {
+  data: {
+    cid: string;
+    [key: string]: unknown;
+  };
+}
+
 export const uploadToPinata = async (file: File) => {
   const formData = new FormData();
 
@@ -11,6 +18,7 @@ export const uploadToPinata = async (file: File) => {
     },
     body: formData,
   });
-  
-  return await request.json();
-}
+
+  const response: PinataResponse = await request.json();
+  return response.data.cid;
+};

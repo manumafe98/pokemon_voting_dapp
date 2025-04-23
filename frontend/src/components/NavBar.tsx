@@ -1,8 +1,8 @@
+import { getSigner } from "@/hooks/getSigner";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./Button";
-import { getSigner } from "@/hooks/getSigner";
 import { LoggedMenu } from "./LoggedMenu";
-import { useState } from "react";
 
 export const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -50,8 +50,16 @@ export const NavBar = () => {
       <div className="flex justify-end w-96">
         {isConnected ? (
           <>
-            <div className="rounded-full w-18 h-18 bg-white border-1 border-solid border-white cursor-pointer p-4" onClick={() => setIsMenuOpen(true)} />
-            <LoggedMenu address={address as string} isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} disconnect={disconnect}/>
+            <div
+              className="rounded-full w-18 h-18 bg-white border-1 border-solid border-white cursor-pointer p-4"
+              onClick={() => setIsMenuOpen(true)}
+            />
+            <LoggedMenu
+              address={address as string}
+              isOpen={isMenuOpen}
+              onClose={() => setIsMenuOpen(false)}
+              disconnect={disconnect}
+            />
           </>
         ) : (
           <Button

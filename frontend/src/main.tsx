@@ -9,5 +9,5 @@ createRoot(document.getElementById("root")!).render(
     <Routes>
       <Route path="/*" element={<PokemonVotingDapp />} />
     </Routes>
-  </BrowserRouter>
+  </BrowserRouter>,
 );
