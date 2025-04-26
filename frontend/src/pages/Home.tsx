@@ -43,7 +43,7 @@ export const Home = () => {
                 <Button
                   text="Vote"
                   type="button"
-                  customStyles="px-8"
+                  className="bg-primary border-1 border-solid border-white hover:bg-light-primary px-8"
                   onClick={() => {}}
                 />
               </div>

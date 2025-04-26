@@ -42,7 +42,11 @@ export const Admin = () => {
           placeholder="Lugia"
           handleChange={handleChange}
         />
-        <Button text="Create" type="submit" customStyles="w-[75%] p-4" />
+        <Button
+          text="Create"
+          type="submit"
+          className="bg-primary border-1 border-solid border-white hover:bg-light-primary w-[75%] p-4"
+        />
       </Form>
     </Layout>
   );

@@ -2,12 +2,13 @@ import { getSigner } from "@/hooks/getSigner";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./Button";
+import { ImageProfile } from "./ImageProfile";
 import { LoggedMenu } from "./LoggedMenu";
 
 export const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { connect, disconnect, isConnected, address } = getSigner();
+  const { connect, disconnect, isConnected, address, isReady } = getSigner();
 
   const navigateToPath = (path: string) => {
     navigate(path);
@@ -47,29 +48,36 @@ export const NavBar = () => {
           </li>
         ))}
       </ul>
-      <div className="flex justify-end w-96">
-        {isConnected ? (
-          <>
-            <div
-              className="rounded-full w-18 h-18 bg-white border-1 border-solid border-white cursor-pointer p-4"
-              onClick={() => setIsMenuOpen(true)}
+      {isReady ? (
+        <div className="flex justify-end w-96">
+          {isConnected ? (
+            <>
+              <ImageProfile
+                className="rounded-full w-18 h-18 bg-white border-1 border-solid border-white cursor-pointer p-4"
+                onClick={() => setIsMenuOpen(true)}
+              />
+              <LoggedMenu
+                address={address as string}
+                isOpen={isMenuOpen}
+                onClose={() => setIsMenuOpen(false)}
+                disconnect={() => {
+                  disconnect();
+                  setIsMenuOpen(false);
+                }}
+              />
+            </>
+          ) : (
+            <Button
+              text="Connect Wallet"
+              type="button"
+              className="bg-primary border-1 border-solid border-white hover:bg-light-primary p-4"
+              onClick={connect}
             />
-            <LoggedMenu
-              address={address as string}
-              isOpen={isMenuOpen}
-              onClose={() => setIsMenuOpen(false)}
-              disconnect={disconnect}
-            />
-          </>
-        ) : (
-          <Button
-            text="Connect Wallet"
-            type="button"
-            customStyles="p-4"
-            onClick={connect}
-          />
-        )}
-      </div>
+          )}
+        </div>
+      ) : (
+        <div className="w-96" />
+      )}
     </div>
   );
 };

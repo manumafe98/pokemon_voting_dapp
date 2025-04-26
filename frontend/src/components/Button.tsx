@@ -1,18 +1,21 @@
+import { ReactNode } from "react";
+
 interface ButtonProps {
-  text: string;
+  text: string | undefined;
   type: "button" | "submit";
-  customStyles: string;
+  className: string;
   onClick?: () => void;
+  children?: ReactNode;
 }
 
-export const Button = ({ text, type, customStyles, onClick }: ButtonProps) => {
+export const Button = ({ text, children, type, className, onClick }: ButtonProps) => {
   return (
     <button
-      className={`bg-primary border-1 border-solid border-white hover:bg-light-primary cursor-pointer ${customStyles}`}
+      className={`cursor-pointer ${className}`}
       type={type}
       onClick={onClick}
     >
-      {text}
+      {text ?? children}
     </button>
   );
 };

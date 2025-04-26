@@ -12,10 +12,13 @@ export const getSigner = () => {
   const [signer, setSigner] = useState<JsonRpcSigner | undefined>(undefined);
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
+  const [isReady, setIsReady] = useState<boolean>(false);
 
   useEffect(() => {
     if (localStorage.getItem(LOCAL_STORAGE_KEY) === "true") {
-      silentReconnect();
+      silentReconnect().finally(() => setIsReady(true));
+    } else {
+      setIsReady(true);
     }
   }, []);
 
@@ -81,6 +84,7 @@ export const getSigner = () => {
     signer,
     isOwner,
     isRegistered,
+    isReady,
     connect,
     disconnect,
   };
