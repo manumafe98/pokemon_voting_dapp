@@ -1,4 +1,4 @@
-import { getSigner } from "@/hooks/getSigner";
+import { useAuth } from "@/context/AuthProvider";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./Button";
@@ -9,7 +9,7 @@ export const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const { connect, disconnect, isConnected, address, isReady, isOwner } =
-    getSigner();
+    useAuth();
 
   const navigateToPath = (path: string) => {
     navigate(path);

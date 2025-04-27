@@ -1,8 +1,8 @@
-import { getSigner } from "@/hooks/getSigner";
+import { useAuth } from "@/context/AuthProvider";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 export const IsOwnerRequired = () => {
-  const { isOwner } = getSigner();
+  const { isOwner } = useAuth();
   const location = useLocation();
 
   return isOwner ? (

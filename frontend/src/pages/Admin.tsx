@@ -3,8 +3,8 @@ import { Form } from "@/components/Form";
 import { ImageUploader } from "@/components/ImageUploader";
 import { Input } from "@/components/Input";
 import { Layout } from "@/components/Layout";
+import { useAuth } from "@/context/AuthProvider";
 import { createPokemon } from "@/hooks/createPokemon";
-import { getSigner } from "@/hooks/getSigner";
 import { uploadToPinata } from "@/hooks/uploadToPinata";
 import { JsonRpcSigner } from "ethers";
 import { useState } from "react";
@@ -12,7 +12,7 @@ import { useState } from "react";
 export const Admin = () => {
   const [name, setName] = useState<string>("");
   const [image, setImage] = useState<File | undefined>();
-  const { signer } = getSigner();
+  const { signer } = useAuth();
 
   const handleChange = (
     _: string,

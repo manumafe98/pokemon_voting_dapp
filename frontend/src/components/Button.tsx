@@ -8,7 +8,13 @@ interface ButtonProps {
   children?: ReactNode;
 }
 
-export const Button = ({ text, children, type, className, onClick }: ButtonProps) => {
+export const Button = ({
+  text,
+  children,
+  type,
+  className,
+  onClick,
+}: ButtonProps) => {
   return (
     <button
       className={`cursor-pointer ${className}`}

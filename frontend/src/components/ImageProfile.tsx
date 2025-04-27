@@ -7,7 +7,10 @@ interface ImageProfileProps {
 
 export const ImageProfile = ({ className, onClick }: ImageProfileProps) => {
   return (
-    <div className={`overflow-hidden rounded-full ${className}`} onClick={onClick}>
+    <div
+      className={`overflow-hidden rounded-full ${className}`}
+      onClick={onClick}
+    >
       <img src={default_image} alt="" />
     </div>
   );
