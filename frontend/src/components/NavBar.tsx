@@ -8,7 +8,8 @@ import { LoggedMenu } from "./LoggedMenu";
 export const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { connect, disconnect, isConnected, address, isReady } = getSigner();
+  const { connect, disconnect, isConnected, address, isReady, isOwner } =
+    getSigner();
 
   const navigateToPath = (path: string) => {
     navigate(path);
@@ -18,14 +19,17 @@ export const NavBar = () => {
     {
       name: "[Vote]",
       onClick: () => navigateToPath("/"),
+      onlyOwner: false,
     },
     {
       name: "[Register]",
       onClick: () => navigateToPath("/register"),
+      onlyOwner: false,
     },
     {
       name: "[Admin]",
       onClick: () => navigateToPath("/admin"),
+      onlyOwner: true,
     },
   ];
 
@@ -38,22 +42,28 @@ export const NavBar = () => {
         [PokemonVotingDapp]
       </h1>
       <ul className="flex gap-2 text-lg">
-        {menuOptions.map((option, index) => (
-          <li
-            key={index}
-            className="cursor-pointer hover:scale-105 transition-transform duration-500"
-            onClick={option.onClick}
-          >
-            {option.name}
-          </li>
-        ))}
+        {menuOptions.map((option, index) => {
+          if (option.onlyOwner && !isOwner) {
+            return null;
+          }
+
+          return (
+            <li
+              key={index}
+              className="cursor-pointer hover:scale-105 transition-transform duration-500"
+              onClick={option.onClick}
+            >
+              {option.name}
+            </li>
+          );
+        })}
       </ul>
       {isReady ? (
         <div className="flex justify-end w-96">
           {isConnected ? (
             <>
               <ImageProfile
-                className="rounded-full w-18 h-18 bg-white border-1 border-solid border-white cursor-pointer p-4"
+                className="w-16 h-16 cursor-pointer rounded-full hover:scale-105 duration-300 transform"
                 onClick={() => setIsMenuOpen(true)}
               />
               <LoggedMenu

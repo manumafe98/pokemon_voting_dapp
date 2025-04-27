@@ -36,7 +36,7 @@ export const LoggedMenu = ({
       </Button>
       <div className="h-96">
         <div className="flex items-center gap-10 border-b-1 border-solid border-gray-800 px-5 py-8">
-          <ImageProfile className="rounded-full bg-white w-24 h-24" />
+          <ImageProfile className="w-24 h-24" />
           <div className="flex gap-2">
             <span className="text-3xl">{displayedAddress}</span>
             <Copy
@@ -45,9 +45,15 @@ export const LoggedMenu = ({
             />
           </div>
         </div>
-        <div className="h-48 p-10">
-          <div className="text-gray-600 text-2xl">My Votes</div>
-          <div className="text-white text-4xl mt-4">0</div>
+        <div className="flex justify-between h-48 p-10">
+          <div className="flex flex-col items-center">
+            <div className="text-gray-600 text-2xl">My Vote</div>
+            <div className="text-white text-3xl mt-4">Lugia</div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div className="text-gray-600 text-2xl">Available Votes</div>
+            <div className="text-white text-3xl mt-4">1</div>
+          </div>
         </div>
         <div className="flex justify-center">
           <Button
