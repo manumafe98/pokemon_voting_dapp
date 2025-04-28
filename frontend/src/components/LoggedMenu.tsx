@@ -1,9 +1,12 @@
 import { Copy } from "@/assets/icons/Copy";
 import { X } from "@/assets/icons/X";
+import default_image from "@/assets/images/default_profile.webp";
+import { useAuth } from "@/context/AuthProvider";
+import { getPokemonById } from "@/hooks/getPokemonById";
+import { useEffect, useState } from "react";
 import { Button } from "./Button";
 import { ImageProfile } from "./ImageProfile";
-import { useAuth } from "@/context/AuthProvider";
-import default_image from "@/assets/images/default_profile.webp";
+import { VoterInformation } from "./VoterInformation";
 
 interface LoggedMenuProps {
   address: string;
@@ -20,10 +23,27 @@ export const LoggedMenu = ({
 }: LoggedMenuProps) => {
   const { isRegistered, voterData } = useAuth();
   const displayedAddress = `${address.substring(0, 5)}...${address.substring(address.length - 4)}`;
+  const [pokemonName, setPokemonName] = useState<string>("-");
+  const [profileImage, setProfileImage] = useState<string>(default_image);
 
   const copyAddressToClipboard = async () => {
     await navigator.clipboard.writeText(address);
   };
+
+  useEffect(() => {
+    const pokemonVoted = async () => {
+      if (voterData?.hasVoted && voterData?.vote) {
+        const name = (await getPokemonById(voterData?.vote)).name;
+        setPokemonName(name);
+        setProfileImage(
+          isRegistered
+            ? `${import.meta.env.PINATA_GATEWAY}/ipfs/${voterData?.ipfsHash}`
+            : default_image,
+        );
+      }
+    };
+    pokemonVoted();
+  }, [isOpen]);
 
   return (
     <div
@@ -40,11 +60,7 @@ export const LoggedMenu = ({
       <div className="h-96">
         <div className="flex items-center gap-10 border-b-1 border-solid border-gray-800 px-5 py-8">
           <ImageProfile
-            imageUrl={
-              isRegistered
-                ? `${import.meta.env.PINATA_GATEWAY}/ipfs/${voterData?.ipfsHash}`
-                : default_image
-            }
+            imageUrl={profileImage}
             imageAlt={`${voterData?.name} profile image`}
             className="w-24 h-24"
           />
@@ -56,16 +72,10 @@ export const LoggedMenu = ({
             />
           </div>
         </div>
-        <div className="flex justify-between h-48 p-10">
-          <div className="flex flex-col items-center">
-            <div className="text-gray-600 text-2xl">My Vote</div>
-            <div className="text-white text-3xl mt-4">Lugia</div>
-          </div>
-          <div className="flex flex-col items-center">
-            <div className="text-gray-600 text-2xl">Available Votes</div>
-            <div className="text-white text-3xl mt-4">1</div>
-          </div>
-        </div>
+        <VoterInformation
+          hasVoted={voterData?.hasVoted}
+          pokemonName={pokemonName}
+        />
         <div className="flex justify-center">
           <Button
             text="Disconnect Wallet"

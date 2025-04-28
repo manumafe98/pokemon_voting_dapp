@@ -1,10 +1,14 @@
 import { Button } from "@/components/Button";
 import { Layout } from "@/components/Layout";
+import { useAuth } from "@/context/AuthProvider";
 import { getPokemons } from "@/hooks/getPokemons";
+import { votePokemon } from "@/hooks/votePokemon";
 import { Pokemon } from "@/types/pokemon.type";
+import { JsonRpcSigner } from "ethers";
 import { useEffect, useState } from "react";
 
 export const Home = () => {
+  const { signer } = useAuth();
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
 
   useEffect(() => {
@@ -14,6 +18,10 @@ export const Home = () => {
     };
     fetchPokemons();
   }, []);
+
+  const handlePokemonVote = async (id: number) => {
+    await votePokemon(signer as JsonRpcSigner, id);
+  };
 
   return (
     <Layout>
@@ -44,7 +52,7 @@ export const Home = () => {
                   text="Vote"
                   type="button"
                   className="bg-primary border-1 border-solid border-white hover:bg-light-primary px-8"
-                  onClick={() => {}}
+                  onClick={() => handlePokemonVote(pokemon.id)}
                 />
               </div>
             </div>
