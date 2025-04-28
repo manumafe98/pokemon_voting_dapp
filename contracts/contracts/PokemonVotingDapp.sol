@@ -9,7 +9,6 @@ contract PokemonVotingDapp {
     struct Pokemon {
         uint256 id;
         string name;
-        string image;
         string ipfsHash;
         uint256 votes;
         address[] pokemonVoters;
@@ -18,7 +17,6 @@ contract PokemonVotingDapp {
     struct Voter {
         address _address;
         string name;
-        string image;
         string ipfsHash;
         bool isAllowedToVote;
         bool hasVoted;

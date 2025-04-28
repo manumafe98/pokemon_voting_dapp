@@ -1,6 +1,8 @@
 import { getIsRegistered } from "@/hooks/getIsRegistered";
 import { getOwnerWallet } from "@/hooks/getOwnerWallet";
 import { getProvider } from "@/hooks/getProvider";
+import { getVoterByAddress } from "@/hooks/getVoterByAddress";
+import { Voter } from "@/types/voter.type";
 import { BrowserProvider, JsonRpcSigner } from "ethers";
 import {
   createContext,
@@ -10,7 +12,7 @@ import {
   useState,
 } from "react";
 
-const LOCAL_STORAGE_KEY = "wallet-connected";
+const LOCAL_STORAGE_KEY = "wallet_connected";
 
 interface AuthContextType {
   isConnected: boolean;
@@ -19,6 +21,7 @@ interface AuthContextType {
   isOwner: boolean;
   isRegistered: boolean;
   isReady: boolean;
+  voterData: Voter | undefined;
   connect: () => Promise<void>;
   disconnect: () => void;
 }
@@ -32,6 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isOwner, setIsOwner] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const [voterData, setVoterData] = useState<Voter | undefined>(undefined);
 
   useEffect(() => {
     if (localStorage.getItem(LOCAL_STORAGE_KEY) === "true") {
@@ -41,37 +45,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const connect = async () => {
-    const provider = getProvider() as BrowserProvider;
-    try {
-      await window.ethereum?.request({
-        method: "wallet_requestPermissions",
-        params: [{ eth_accounts: {} }],
-      });
-
-      const signer = await provider.getSigner();
-      const userAddress = await signer.getAddress();
-      const ownerWallet = await getOwnerWallet();
-      const isWalletRegistered = await getIsRegistered(userAddress);
-
-      const message = "Sign to confirm login";
-      await signer.signMessage(message);
-
-      setSigner(signer);
-      setAddress(userAddress);
-      setIsConnected(true);
-      setIsOwner(userAddress === ownerWallet);
-      setIsRegistered(isWalletRegistered);
-      localStorage.setItem(LOCAL_STORAGE_KEY, "true");
-    } catch (error) {
-      disconnect();
-      console.error("Failed to connect:", error);
+  useEffect(() => {
+    const fetchVoterData = async () => {
+      if (isRegistered && address) {
+        const voterData = await getVoterByAddress(address);
+        setVoterData(voterData);
+      }
     }
-  };
+    fetchVoterData();
+  }, [isRegistered, address])
 
-  const silentReconnect = async () => {
+  const setupConnection = async (requirePermission: boolean) => {
     const provider = getProvider() as BrowserProvider;
     try {
+      if (requirePermission) {
+        await window.ethereum?.request({
+          method: "wallet_requestPermissions",
+          params: [{ eth_accounts: {} }],
+        });
+
+        const signer = await provider.getSigner();
+        await signer.signMessage("Sign to confirm login");
+      }
+
       const signer = await provider.getSigner();
       const userAddress = await signer.getAddress();
       const ownerWallet = await getOwnerWallet();
@@ -82,17 +78,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsConnected(true);
       setIsOwner(userAddress === ownerWallet);
       setIsRegistered(isWalletRegistered);
+
+      if (requirePermission) {
+        localStorage.setItem(LOCAL_STORAGE_KEY, "true");
+      }
     } catch (error) {
       disconnect();
-      console.error("Failed to reconnect silently:", error);
+      console.error(
+        requirePermission
+          ? "Failed to connect:"
+          : "Failed to reconnect silently:",
+        error,
+      );
     }
   };
+
+  const connect = () => setupConnection(true);
+  const silentReconnect = () => setupConnection(false);
 
   const disconnect = () => {
-    setIsConnected(false);
     setAddress(undefined);
     setSigner(undefined);
+    setVoterData(undefined);
     setIsOwner(false);
+    setIsConnected(false);
     setIsRegistered(false);
     localStorage.removeItem(LOCAL_STORAGE_KEY);
   };
@@ -106,6 +115,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isOwner,
         isRegistered,
         isReady,
+        voterData,
         connect,
         disconnect,
       }}

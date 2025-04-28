@@ -1,3 +1,4 @@
+import default_image from "@/assets/images/default_profile.webp";
 import { useAuth } from "@/context/AuthProvider";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -8,8 +9,16 @@ import { LoggedMenu } from "./LoggedMenu";
 export const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { connect, disconnect, isConnected, address, isReady, isOwner } =
-    useAuth();
+  const {
+    connect,
+    disconnect,
+    isConnected,
+    address,
+    isReady,
+    isOwner,
+    isRegistered,
+    voterData,
+  } = useAuth();
 
   const navigateToPath = (path: string) => {
     navigate(path);
@@ -32,6 +41,10 @@ export const NavBar = () => {
       onlyOwner: true,
     },
   ];
+
+  if (!isReady) {
+    return <div className="bg-background h-screen">Loading...</div>;
+  }
 
   return (
     <div className="flex justify-between items-center bg-background h-28 text-white px-10 border-b-1 border-solid border-white">
@@ -63,6 +76,12 @@ export const NavBar = () => {
           {isConnected ? (
             <>
               <ImageProfile
+                imageUrl={
+                  isRegistered
+                    ? `${import.meta.env.PINATA_GATEWAY}/ipfs/${voterData?.ipfsHash}`
+                    : default_image
+                }
+                imageAlt={`${voterData?.name} profile image`}
                 className="w-16 h-16 cursor-pointer rounded-full hover:scale-105 duration-300 transform"
                 onClick={() => setIsMenuOpen(true)}
               />

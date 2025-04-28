@@ -2,6 +2,8 @@ import { Copy } from "@/assets/icons/Copy";
 import { X } from "@/assets/icons/X";
 import { Button } from "./Button";
 import { ImageProfile } from "./ImageProfile";
+import { useAuth } from "@/context/AuthProvider";
+import default_image from "@/assets/images/default_profile.webp";
 
 interface LoggedMenuProps {
   address: string;
@@ -16,6 +18,7 @@ export const LoggedMenu = ({
   onClose,
   disconnect,
 }: LoggedMenuProps) => {
+  const { isRegistered, voterData } = useAuth();
   const displayedAddress = `${address.substring(0, 5)}...${address.substring(address.length - 4)}`;
 
   const copyAddressToClipboard = async () => {
@@ -36,7 +39,15 @@ export const LoggedMenu = ({
       </Button>
       <div className="h-96">
         <div className="flex items-center gap-10 border-b-1 border-solid border-gray-800 px-5 py-8">
-          <ImageProfile className="w-24 h-24" />
+          <ImageProfile
+            imageUrl={
+              isRegistered
+                ? `${import.meta.env.PINATA_GATEWAY}/ipfs/${voterData?.ipfsHash}`
+                : default_image
+            }
+            imageAlt={`${voterData?.name} profile image`}
+            className="w-24 h-24"
+          />
           <div className="flex gap-2">
             <span className="text-3xl">{displayedAddress}</span>
             <Copy

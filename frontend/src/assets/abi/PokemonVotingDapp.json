@@ -126,11 +126,6 @@
           },
           {
             "internalType": "string",
-            "name": "image",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
             "name": "ipfsHash",
             "type": "string"
           },
@@ -173,11 +168,6 @@
           {
             "internalType": "string",
             "name": "name",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "image",
             "type": "string"
           },
           {

@@ -1,17 +1,21 @@
-import default_image from "@/assets/images/default_profile.webp";
-
 interface ImageProfileProps {
   className: string;
+  imageUrl: string;
+  imageAlt: string
   onClick?: () => void;
 }
 
-export const ImageProfile = ({ className, onClick }: ImageProfileProps) => {
+export const ImageProfile = ({ className, imageUrl, imageAlt, onClick }: ImageProfileProps) => {
   return (
     <div
       className={`overflow-hidden rounded-full ${className}`}
       onClick={onClick}
     >
-      <img src={default_image} alt="" />
+      <img
+        src={imageUrl}
+        className="object-cover w-full h-full"
+        alt={imageAlt}
+      />
     </div>
   );
 };
