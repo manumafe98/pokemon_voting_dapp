@@ -1,4 +1,4 @@
-import { JsonRpcSigner } from "ethers";
+import { ContractTransactionResponse, JsonRpcSigner } from "ethers";
 import { getContract } from "./getContract";
 
 export const registerVoter = async (
@@ -7,6 +7,18 @@ export const registerVoter = async (
   voterName: string,
   ipfsHash: string,
 ) => {
-  const contract = getContract(signer);
-  await contract.registerVoter(voterAddress, voterName, ipfsHash);
+  let success;
+
+  try {
+    const contract = getContract(signer);
+    const transaction: Promise<ContractTransactionResponse> =
+      await contract.registerVoter(voterAddress, voterName, ipfsHash);
+    const receipt = await (await transaction).wait();
+
+    success = receipt?.status === 1;
+  } catch {
+    success = false;
+  }
+
+  return success;
 };

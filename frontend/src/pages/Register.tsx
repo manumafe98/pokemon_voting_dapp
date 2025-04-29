@@ -14,7 +14,12 @@ export const Register = () => {
   ) => {
     if (!image) return;
     const cid = await uploadToPinata(image);
-    registerVoter(signer as JsonRpcSigner, address as string, name, cid);
+    return await registerVoter(
+      signer as JsonRpcSigner,
+      address as string,
+      name,
+      cid,
+    );
   };
 
   return (

@@ -14,7 +14,7 @@ export const Admin = () => {
   ) => {
     if (!image) return;
     const cid = await uploadToPinata(image);
-    createPokemon(signer as JsonRpcSigner, name, cid);
+    return await createPokemon(signer as JsonRpcSigner, name, cid);
   };
 
   return (

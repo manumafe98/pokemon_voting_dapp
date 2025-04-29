@@ -51,9 +51,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const voterData = await getVoterByAddress(address);
         setVoterData(voterData);
       }
-    }
+    };
     fetchVoterData();
-  }, [isRegistered, address])
+  }, [isRegistered, address]);
 
   const setupConnection = async (requirePermission: boolean) => {
     const provider = getProvider() as BrowserProvider;

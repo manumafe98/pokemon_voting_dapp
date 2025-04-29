@@ -31,18 +31,18 @@ export const LoggedMenu = ({
   };
 
   useEffect(() => {
-    const pokemonVoted = async () => {
+    const refreshUserData = async () => {
       if (voterData?.hasVoted && voterData?.vote) {
         const name = (await getPokemonById(voterData?.vote)).name;
         setPokemonName(name);
-        setProfileImage(
-          isRegistered
-            ? `${import.meta.env.PINATA_GATEWAY}/ipfs/${voterData?.ipfsHash}`
-            : default_image,
-        );
       }
+      setProfileImage(
+        isRegistered
+          ? `${import.meta.env.PINATA_GATEWAY}/ipfs/${voterData?.ipfsHash}`
+          : default_image,
+      );
     };
-    pokemonVoted();
+    refreshUserData();
   }, [isOpen]);
 
   return (

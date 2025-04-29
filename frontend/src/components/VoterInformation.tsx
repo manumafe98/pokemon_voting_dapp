@@ -3,7 +3,10 @@ interface VoterInformationProps {
   pokemonName: string | undefined;
 }
 
-export const VoterInformation = ({ hasVoted, pokemonName }: VoterInformationProps) => {
+export const VoterInformation = ({
+  hasVoted,
+  pokemonName,
+}: VoterInformationProps) => {
   const topics = [
     {
       category: "My Vote",

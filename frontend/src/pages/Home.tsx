@@ -1,15 +1,22 @@
 import { Button } from "@/components/Button";
 import { Layout } from "@/components/Layout";
+import { PopUpNotification } from "@/components/PopUpNotification";
 import { useAuth } from "@/context/AuthProvider";
 import { getPokemons } from "@/hooks/getPokemons";
 import { votePokemon } from "@/hooks/votePokemon";
+import { NotificationType } from "@/types/notification.type";
 import { Pokemon } from "@/types/pokemon.type";
 import { JsonRpcSigner } from "ethers";
 import { useEffect, useState } from "react";
 
 export const Home = () => {
-  const { signer } = useAuth();
+  const { signer, isConnected, isRegistered } = useAuth();
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
+  const [notificationMessage, setNotificationMessage] = useState<string>("");
+  const [notificationType, setNotificationType] =
+    useState<NotificationType>("error");
+  const [showPopUpNotification, setShowPopUpNotification] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const fetchPokemons = async () => {
@@ -19,8 +26,29 @@ export const Home = () => {
     fetchPokemons();
   }, []);
 
+  const popUpHelper = (message: string, status: NotificationType) => {
+    setNotificationMessage(message);
+    setNotificationType(status);
+    setShowPopUpNotification(true);
+    setTimeout(() => setShowPopUpNotification(false), 4000);
+  };
+
   const handlePokemonVote = async (id: number) => {
-    await votePokemon(signer as JsonRpcSigner, id);
+    if (!isConnected) {
+      popUpHelper("You have to be connected and registered to vote", "error");
+      return;
+    }
+    if (!isRegistered) {
+      popUpHelper("You have to be registered to vote", "error");
+      return;
+    }
+
+    const success = await votePokemon(signer as JsonRpcSigner, id);
+    if (success) {
+      popUpHelper("Your vote was sucessfull", "success");
+    } else {
+      popUpHelper("Something went wrong", "error");
+    }
   };
 
   return (
@@ -59,6 +87,12 @@ export const Home = () => {
           </div>
         ))}
       </div>
+      {showPopUpNotification && (
+        <PopUpNotification
+          message={notificationMessage}
+          type={notificationType}
+        />
+      )}
     </Layout>
   );
 };

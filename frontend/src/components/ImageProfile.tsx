@@ -1,11 +1,16 @@
 interface ImageProfileProps {
   className: string;
   imageUrl: string;
-  imageAlt: string
+  imageAlt: string;
   onClick?: () => void;
 }
 
-export const ImageProfile = ({ className, imageUrl, imageAlt, onClick }: ImageProfileProps) => {
+export const ImageProfile = ({
+  className,
+  imageUrl,
+  imageAlt,
+  onClick,
+}: ImageProfileProps) => {
   return (
     <div
       className={`overflow-hidden rounded-full ${className}`}
