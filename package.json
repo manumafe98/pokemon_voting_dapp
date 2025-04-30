@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "hardhat:test": "cd contracts && npx hardhat test",
+    "hardhat:coverage": "cd contracts && npx hardhat coverage",
     "hardhat:compile": "cd contracts && npx hardhat compile",
     "hardhat:node": "cd contracts && npx hardhat node",
     "hardhat:clean": "cd contracts && npx hardhat clean",

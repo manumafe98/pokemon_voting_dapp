@@ -1,10 +1,15 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.28;
 
+error PokemonVotingDapp__VoterAlreadyRegistered();
+error PokemonVotingDapp__PleaseRegisterAWalletYouOwn();
+error PokemonVotingDapp__YouAlreadyVoted();
+error PokemonVotingDapp__ToVoteYouHaveToBeRegistered();
+
 contract PokemonVotingDapp {
 
-    address public owner;
-    uint256 public totalPokemons;
+    address immutable i_owner;
+    uint256 private s_totalPokemons;
 
     struct Pokemon {
         uint256 id;
@@ -40,21 +45,21 @@ contract PokemonVotingDapp {
         uint256 vote
     );
 
-    mapping(uint256 => Pokemon) pokemons;
-    mapping(address => Voter) voters;
-    mapping(address => bool) public isRegistered;
+    mapping(uint256 => Pokemon) private pokemons;
+    mapping(address => Voter) private voters;
+    mapping(address => bool) private isRegistered;
 
     modifier onlyOwner() {
-        require(msg.sender == owner);
+        require(msg.sender == i_owner);
         _;
     }
 
     constructor() {
-        owner = msg.sender;
+        i_owner = msg.sender;
     }
 
     function createPokemon(string memory _name, string memory _ipfsHash) external onlyOwner {
-        totalPokemons += 1;
+        uint256 totalPokemons = s_totalPokemons += 1;
 
         Pokemon storage pokemon = pokemons[totalPokemons];
         pokemon.id = totalPokemons;
@@ -70,8 +75,12 @@ contract PokemonVotingDapp {
     }
 
     function registerVoter(address _address, string memory _name, string memory _ipfsHash) external {
-        require(msg.sender == _address, "Please registered a wallet you own");
-        require(!isRegistered[_address], "Voter already registered");
+        if(msg.sender != _address) {
+            revert PokemonVotingDapp__PleaseRegisterAWalletYouOwn();
+        }
+        if (isRegistered[_address]) {
+            revert PokemonVotingDapp__VoterAlreadyRegistered();
+        }
 
         Voter storage voter = voters[_address];
         voter._address = _address;
@@ -93,8 +102,12 @@ contract PokemonVotingDapp {
     function votePokemon(uint256 _id) external {
         Voter storage voter = voters[msg.sender];
 
-        require(isRegistered[msg.sender], "To vote you have to be registered");
-        require(voter.isAllowedToVote, "You already voted");
+        if(!isRegistered[msg.sender]) {
+            revert PokemonVotingDapp__ToVoteYouHaveToBeRegistered();
+        }
+        if (!voter.isAllowedToVote) {
+            revert PokemonVotingDapp__YouAlreadyVoted();
+        }
 
         Pokemon storage pokemon = pokemons[_id];
         pokemon.votes += 1;
@@ -103,5 +116,17 @@ contract PokemonVotingDapp {
         voter.hasVoted = true;
         voter.isAllowedToVote = false;
         voter.vote = _id;
+    }
+
+    function getOwner() external view returns(address) {
+        return i_owner;
+    }
+
+    function getTotalPokemons() external view returns(uint256) {
+        return s_totalPokemons;
+    }
+
+    function getIsRegistered(address _address) external view returns(bool) {
+        return isRegistered[_address];
     }
 }

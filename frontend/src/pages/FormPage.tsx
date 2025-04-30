@@ -5,7 +5,7 @@ import { Input } from "@/components/Input";
 import { Layout } from "@/components/Layout";
 import { PopUpNotification } from "@/components/PopUpNotification";
 import { useAuth } from "@/context/AuthProvider";
-import { NotificationType } from "@/types/notification.type";
+import { useNotification } from "@/hooks/useNotification";
 import { useState } from "react";
 
 interface InputField {
@@ -35,12 +35,13 @@ export const FormPage = ({
   const [name, setName] = useState<string>("");
   const [formAddress, setFormAddress] = useState<string>("");
   const [image, setImage] = useState<File | undefined>();
-  const [notificationMessage, setNotificationMessage] = useState<string>("");
-  const [notificationType, setNotificationType] =
-    useState<NotificationType>("error");
-  const [showPopUpNotification, setShowPopUpNotification] =
-    useState<boolean>(false);
-  const { isConnected, address } = useAuth();
+  const { isConnected, address, refreshVoterState } = useAuth();
+  const {
+    showPopUpNotification,
+    notificationMessage,
+    notificationType,
+    showNotification,
+  } = useNotification();
 
   const handleChange = (
     label: string,
@@ -58,20 +59,13 @@ export const FormPage = ({
     setImage(file);
   };
 
-  const popUpHelper = (message: string, status: NotificationType) => {
-    setNotificationMessage(message);
-    setNotificationType(status);
-    setShowPopUpNotification(true);
-    setTimeout(() => setShowPopUpNotification(false), 4000);
-  };
-
   const formValidation = (
     name: string,
     formAddress: string,
     image: File | undefined,
   ) => {
     if (showAddressField && !isConnected) {
-      popUpHelper(
+      showNotification(
         "Please connect your wallet to continue the registration",
         "error",
       );
@@ -79,22 +73,22 @@ export const FormPage = ({
     }
 
     if (!image) {
-      popUpHelper("Please add an image", "error");
+      showNotification("Please add an image", "error");
       return false;
     }
 
     if (name.trim() === "") {
-      popUpHelper("Please enter a valid name", "error");
+      showNotification("Please enter a valid name", "error");
       return false;
     }
 
     if (showAddressField && formAddress.trim() === "") {
-      popUpHelper("Please enter a valid address", "error");
+      showNotification("Please enter a valid address", "error");
       return false;
     }
 
     if (showAddressField && address !== formAddress) {
-      popUpHelper("You can't register non connected wallets", "error");
+      showNotification("You can't register non connected wallets", "error");
       return false;
     }
 
@@ -114,9 +108,13 @@ export const FormPage = ({
         const formMessage = !showAddressField
           ? `${name} was successfully created`
           : `You sucessfully registered`;
-        popUpHelper(formMessage, "success");
+        showNotification(formMessage, "success");
       } else {
-        popUpHelper("Something went wrong!", "error");
+        showNotification("Something went wrong!", "error");
+      }
+
+      if (showAddressField) {
+        refreshVoterState();
       }
     }
   };

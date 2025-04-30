@@ -27,7 +27,7 @@ export const NavBar = () => {
         ? `${import.meta.env.PINATA_GATEWAY}/ipfs/${voterData?.ipfsHash}`
         : default_image,
     );
-  }, []);
+  }, [isRegistered]);
 
   const navigateToPath = (path: string) => {
     navigate(path);
@@ -56,9 +56,9 @@ export const NavBar = () => {
   }
 
   return (
-    <div className="flex justify-between items-center bg-background h-28 text-white px-10 border-b-1 border-solid border-white">
+    <div className="flex justify-between items-center bg-background h-28 text-white px-10 border-b-1 border-solid border-white max-sm:px-5">
       <h1
-        className="text-3xl cursor-pointer w-96"
+        className="text-3xl cursor-pointer w-96 max-sm:text-2xl"
         onClick={() => navigateToPath("/")}
       >
         [PokemonVotingDapp]

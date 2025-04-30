@@ -21,89 +21,90 @@ interface AuthContextType {
   isOwner: boolean;
   isRegistered: boolean;
   isReady: boolean;
-  voterData: Voter | undefined;
-  connect: () => Promise<void>;
+  voterData?: Voter;
+  connect: (requirePermission?: boolean) => Promise<void>;
   disconnect: () => void;
+  refreshVoterState: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isConnected, setIsConnected] = useState(false);
   const [address, setAddress] = useState<string>();
   const [signer, setSigner] = useState<JsonRpcSigner>();
   const [isOwner, setIsOwner] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
   const [isReady, setIsReady] = useState(false);
-  const [voterData, setVoterData] = useState<Voter | undefined>(undefined);
+  const [voterData, setVoterData] = useState<Voter>();
+
+  const isConnected = !!address;
 
   useEffect(() => {
-    if (localStorage.getItem(LOCAL_STORAGE_KEY) === "true") {
-      silentReconnect().finally(() => setIsReady(true));
-    } else {
+    const autoConnect = async () => {
+      if (localStorage.getItem(LOCAL_STORAGE_KEY) === "true") {
+        await connect(false);
+      }
       setIsReady(true);
-    }
+    };
+    autoConnect();
   }, []);
 
-  useEffect(() => {
-    const fetchVoterData = async () => {
-      if (isRegistered && address) {
-        const voterData = await getVoterByAddress(address);
-        setVoterData(voterData);
-      }
-    };
-    fetchVoterData();
-  }, [isRegistered, address]);
-
-  const setupConnection = async (requirePermission: boolean) => {
+  const connect = async (requirePermission: boolean = true) => {
     const provider = getProvider() as BrowserProvider;
     try {
       if (requirePermission) {
-        await window.ethereum?.request({
-          method: "wallet_requestPermissions",
-          params: [{ eth_accounts: {} }],
-        });
-
-        const signer = await provider.getSigner();
-        await signer.signMessage("Sign to confirm login");
+        await provider.send("wallet_requestPermissions", [
+          { eth_accounts: {} },
+        ]);
       }
 
       const signer = await provider.getSigner();
       const userAddress = await signer.getAddress();
-      const ownerWallet = await getOwnerWallet();
-      const isWalletRegistered = await getIsRegistered(userAddress);
+
+      if (requirePermission) {
+        await signer.signMessage("Sign to confirm login");
+        localStorage.setItem(LOCAL_STORAGE_KEY, "true");
+      }
 
       setSigner(signer);
       setAddress(userAddress);
-      setIsConnected(true);
-      setIsOwner(userAddress === ownerWallet);
-      setIsRegistered(isWalletRegistered);
 
-      if (requirePermission) {
-        localStorage.setItem(LOCAL_STORAGE_KEY, "true");
-      }
+      const [ownerWallet, registered] = await Promise.all([
+        getOwnerWallet(),
+        getIsRegistered(userAddress),
+      ]);
+
+      setIsOwner(userAddress === ownerWallet);
+      setIsRegistered(registered);
+
+      setVoterData(
+        registered ? await getVoterByAddress(userAddress) : undefined,
+      );
     } catch (error) {
       disconnect();
       console.error(
-        requirePermission
-          ? "Failed to connect:"
-          : "Failed to reconnect silently:",
+        requirePermission ? "Failed to connect:" : "Silent reconnect failed:",
         error,
       );
     }
   };
-
-  const connect = () => setupConnection(true);
-  const silentReconnect = () => setupConnection(false);
 
   const disconnect = () => {
     setAddress(undefined);
     setSigner(undefined);
     setVoterData(undefined);
     setIsOwner(false);
-    setIsConnected(false);
     setIsRegistered(false);
     localStorage.removeItem(LOCAL_STORAGE_KEY);
+  };
+
+  const refreshVoterState = async () => {
+    if (!address) return;
+
+    const registered = await getIsRegistered(address);
+    setIsRegistered(registered);
+
+    setVoterData(registered ? await getVoterByAddress(address) : undefined);
   };
 
   return (
@@ -118,6 +119,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         voterData,
         connect,
         disconnect,
+        refreshVoterState,
       }}
     >
       {children}
@@ -128,7 +130,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useSigner must be used within a SignerProvider");
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };

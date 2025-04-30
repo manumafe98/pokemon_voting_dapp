@@ -5,6 +5,26 @@
     "type": "constructor"
   },
   {
+    "inputs": [],
+    "name": "PokemonVotingDapp__PleaseRegisterAWalletYouOwn",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "PokemonVotingDapp__ToVoteYouHaveToBeRegistered",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "PokemonVotingDapp__VoterAlreadyRegistered",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "PokemonVotingDapp__YouAlreadyVoted",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -105,6 +125,38 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "getIsRegistered",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getOwner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "_id",
         "type": "uint256"
@@ -143,6 +195,19 @@
         "internalType": "struct PokemonVotingDapp.Pokemon",
         "name": "",
         "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getTotalPokemons",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -203,38 +268,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "isRegistered",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "owner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "_address",
         "type": "address"
       },
@@ -252,19 +285,6 @@
     "name": "registerVoter",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "totalPokemons",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {

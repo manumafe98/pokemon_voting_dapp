@@ -9,7 +9,7 @@ export const PopUpNotification = ({
   message,
   type,
 }: PopUpNotificationProps) => {
-  const bgColor = type === "success" ? "bg-[#ff9797]" : "bg-[#ff6b6b]";
+  const bgColor = type === "success" ? "bg-light-primary" : "bg-primary";
 
   return (
     <div

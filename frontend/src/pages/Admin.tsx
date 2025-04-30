@@ -19,7 +19,7 @@ export const Admin = () => {
 
   return (
     <FormPage
-      title="Create Pokémon"
+      title="Create Pokemon"
       inputs={[{ label: "Name", placeholder: "Lugia" }]}
       buttonText="Create"
       onSubmit={handleSubmit}

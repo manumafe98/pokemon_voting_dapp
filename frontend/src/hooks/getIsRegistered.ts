@@ -5,7 +5,7 @@ export const getIsRegistered = async (
 ): Promise<boolean> => {
   const contract = getContract();
   try {
-    return await contract.isRegistered(walletAddress);
+    return await contract.getIsRegistered(walletAddress);
   } catch (error) {
     return false;
   }

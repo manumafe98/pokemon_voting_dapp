@@ -23,7 +23,7 @@ describe("PokemonVotingDapp", () => {
 
   describe("Test Deployment", () => {
     it("Sets the owner", async () => {
-      expect(await pokemonVotingDapp.owner()).to.equal(
+      expect(await pokemonVotingDapp.getOwner()).to.equal(
         await deployer.getAddress(),
       );
     });
@@ -49,7 +49,7 @@ describe("PokemonVotingDapp", () => {
     });
 
     it("Updates pokemon count", async () => {
-      const totalPokemons = await pokemonVotingDapp.totalPokemons();
+      const totalPokemons = await pokemonVotingDapp.getTotalPokemons();
       expect(totalPokemons).to.equal(1);
     });
 
@@ -79,7 +79,10 @@ describe("PokemonVotingDapp", () => {
         pokemonVotingDapp
           .connect(buyer)
           .registerVoter(buyer, VOTER_NAME, VOTER_IPFS_HASH),
-      ).to.revertedWith("Voter already registered");
+      ).to.revertedWithCustomError(
+        pokemonVotingDapp,
+        "PokemonVotingDapp__VoterAlreadyRegistered",
+      );
     });
 
     it("Test try to register a wallet not owned", async () => {
@@ -88,7 +91,10 @@ describe("PokemonVotingDapp", () => {
         pokemonVotingDapp
           .connect(buyer)
           .registerVoter(randomWallet, VOTER_NAME, VOTER_IPFS_HASH),
-      ).to.revertedWith("Please registered a wallet you own");
+      ).to.revertedWithCustomError(
+        pokemonVotingDapp,
+        "PokemonVotingDapp__PleaseRegisterAWalletYouOwn",
+      );
     });
   });
 
@@ -109,8 +115,11 @@ describe("PokemonVotingDapp", () => {
     });
 
     it("Voter non registered", async () => {
-      expect(pokemonVotingDapp.connect(buyer).votePokemon(1)).to.revertedWith(
-        "To vote you have to be registered",
+      expect(
+        pokemonVotingDapp.connect(buyer).votePokemon(1),
+      ).to.revertedWithCustomError(
+        pokemonVotingDapp,
+        "PokemonVotingDapp__ToVoteYouHaveToBeRegistered",
       );
     });
 
@@ -126,8 +135,11 @@ describe("PokemonVotingDapp", () => {
     });
 
     it("User try to vote again", async () => {
-      expect(pokemonVotingDapp.connect(buyer).votePokemon(1)).to.revertedWith(
-        "You already voted",
+      expect(
+        pokemonVotingDapp.connect(buyer).votePokemon(1),
+      ).to.revertedWithCustomError(
+        pokemonVotingDapp,
+        "PokemonVotingDapp__YouAlreadyVoted",
       );
     });
 
