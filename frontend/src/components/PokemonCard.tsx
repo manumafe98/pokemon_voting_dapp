@@ -1,4 +1,4 @@
-import { Pokemon } from "@/types/pokemon.type"
+import { Pokemon } from "@/types/pokemon.type";
 import { Button } from "./Button";
 
 interface PokemonCardProps {
@@ -6,11 +6,12 @@ interface PokemonCardProps {
   handlePokemonVote: (id: number) => Promise<void>;
 }
 
-export const PokemonCard = ({ pokemon, handlePokemonVote }: PokemonCardProps) => {
+export const PokemonCard = ({
+  pokemon,
+  handlePokemonVote,
+}: PokemonCardProps) => {
   return (
-    <div
-      className="flex flex-col border-1 border-solid border-gray-600 h-10/12 w-80 group hover:border-white max-lg:w-2/3 max-sm:w-full"
-    >
+    <div className="flex flex-col border-1 border-solid border-gray-600 h-10/12 w-80 group hover:border-white max-lg:w-2/3 max-sm:w-full">
       <div className="w-full h-4/5 overflow-hidden">
         <img
           className="h-full w-full group-hover:scale-105 transition-transform duration-900"
