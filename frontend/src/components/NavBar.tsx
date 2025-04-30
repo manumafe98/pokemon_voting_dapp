@@ -1,17 +1,21 @@
 import { Menu } from "@/assets/icons/Menu";
 import default_image from "@/assets/images/default_profile.webp";
 import { useAuth } from "@/context/AuthProvider";
+import { getPokemonById } from "@/hooks/getPokemonById";
+import { navigateToPath } from "@/hooks/navigateToPath";
+import { useWindowSize } from "@/hooks/useWindowSize";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./Button";
 import { ImageProfile } from "./ImageProfile";
 import { LoggedMenu } from "./LoggedMenu";
+import { Navigation } from "./Navigation";
 
 export const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [showMenuIcon, setShowMenuIcon] = useState<boolean>(false);
+  const showMenuIcon = useWindowSize();
   const [profileImage, setProfileImage] = useState<string>(default_image);
-  const navigate = useNavigate();
+  const [pokemonName, setPokemonName] = useState<string>("-");
   const {
     connect,
     disconnect,
@@ -22,46 +26,45 @@ export const NavBar = () => {
     isRegistered,
     voterData,
   } = useAuth();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    setProfileImage(
-      isRegistered
-        ? `${import.meta.env.PINATA_GATEWAY}/ipfs/${voterData?.ipfsHash}`
-        : default_image,
-    );
-  }, [isRegistered]);
+useEffect(() => {
+  const refreshUserData = async () => {
+    if (isRegistered && voterData?.ipfsHash) {
+      setProfileImage(
+        `${import.meta.env.PINATA_GATEWAY}/ipfs/${voterData.ipfsHash}`,
+      );
+    } else {
+      setProfileImage(default_image);
+    }
 
-  useEffect(() => {
-    const checkWidth = () => {
-      setShowMenuIcon(window.innerWidth <= 1021);
-    };
-
-    checkWidth();
-    window.addEventListener("resize", checkWidth);
-    return () => window.removeEventListener("resize", checkWidth);
-  }, []);
-
-  const navigateToPath = (path: string) => {
-    navigate(path);
+    if (voterData?.hasVoted && voterData?.vote) {
+      const name = (await getPokemonById(voterData.vote)).name;
+      setPokemonName(name);
+    }
   };
 
-  const menuOptions = [
-    {
-      name: "[Vote]",
-      onClick: () => navigateToPath("/"),
-      onlyOwner: false,
-    },
-    {
-      name: "[Register]",
-      onClick: () => navigateToPath("/register"),
-      onlyOwner: false,
-    },
-    {
-      name: "[Admin]",
-      onClick: () => navigateToPath("/admin"),
-      onlyOwner: true,
-    },
-  ];
+  refreshUserData();
+}, [isMenuOpen, isRegistered, voterData]);
+  
+  const LoggedMenuWrapper = () => (
+    <LoggedMenu
+      isMenuIconOn={showMenuIcon}
+      address={address as string}
+      isOpen={isMenuOpen}
+      isOwner={isOwner}
+      isConnected={isConnected}
+      voterData={voterData}
+      pokemonName={pokemonName}
+      profileImage={profileImage}
+      onClose={() => setIsMenuOpen(false)}
+      connect={connect}
+      disconnect={() => {
+        disconnect();
+        setIsMenuOpen(false);
+      }}
+    />
+  );
 
   if (!isReady) {
     return <div className="bg-background h-screen">Loading...</div>;
@@ -71,46 +74,18 @@ export const NavBar = () => {
     <div className="flex justify-between items-center bg-background h-28 text-white px-10 border-b-1 border-solid border-white max-sm:px-5">
       <h1
         className="text-3xl cursor-pointer w-96 max-sm:text-2xl"
-        onClick={() => navigateToPath("/")}
+        onClick={() => navigateToPath(navigate, "/")}
       >
         [PokemonVotingDapp]
       </h1>
-
       {showMenuIcon ? (
         <>
           <Menu onClick={() => setIsMenuOpen(true)} />
-          <LoggedMenu
-            isMenuIconOn={showMenuIcon}
-            address={address as string}
-            isOpen={isMenuOpen}
-            isOwner={isOwner}
-            onClose={() => setIsMenuOpen(false)}
-            connect={connect}
-            disconnect={() => {
-              disconnect();
-              setIsMenuOpen(false);
-            }}
-          />
+          <LoggedMenuWrapper />
         </>
       ) : (
         <>
-          <ul className="flex gap-2 text-lg">
-            {menuOptions.map((option, index) => {
-              if (option.onlyOwner && !isOwner) {
-                return null;
-              }
-
-              return (
-                <li
-                  key={index}
-                  className="cursor-pointer hover:scale-105 transition-transform duration-500"
-                  onClick={option.onClick}
-                >
-                  {option.name}
-                </li>
-              );
-            })}
-          </ul>
+          <Navigation showMenuIcon={showMenuIcon} isOwner={isOwner} />
           {isReady ? (
             <div className="flex justify-end w-96">
               {isConnected ? (
@@ -121,18 +96,7 @@ export const NavBar = () => {
                     className="w-16 h-16 cursor-pointer rounded-full hover:scale-105 duration-300 transform"
                     onClick={() => setIsMenuOpen(true)}
                   />
-                  <LoggedMenu
-                    isMenuIconOn={showMenuIcon}
-                    address={address as string}
-                    isOpen={isMenuOpen}
-                    isOwner={isOwner}
-                    onClose={() => setIsMenuOpen(false)}
-                    connect={connect}
-                    disconnect={() => {
-                      disconnect();
-                      setIsMenuOpen(false);
-                    }}
-                  />
+                  <LoggedMenuWrapper />
                 </>
               ) : (
                 <Button

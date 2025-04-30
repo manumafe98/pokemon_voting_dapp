@@ -72,12 +72,14 @@ export const ImageUploader = ({ handleImageChange }: ImageUploaderProps) => {
             </>
           ) : (
             <>
-              <span>Upload file: JPG, PNG, WEPB Max 10MB</span>
+              <span className="max-sm:text-sm max-sm:text-center">
+                Upload file: JPG, PNG, WEPB Max 10MB
+              </span>
               <DownloadCloudIcon />
-              <span>Drag & Drop File</span>
+              <span className="max-sm:text-center">Drag & Drop File</span>
               <span>or</span>
               <span
-                className="mt-2 underline opacity-50 cursor-pointer"
+                className="mt-2 underline opacity-50 cursor-pointer max-sm:text-sm max-sm:text-center"
                 role="button"
                 onClick={selectFiles}
               >

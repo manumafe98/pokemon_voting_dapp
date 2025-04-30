@@ -9,7 +9,7 @@ export const Form = ({ children, handleSubmit }: FormProps) => {
   return (
     <div className="flex justify-center items-center h-full">
       <form
-        className="flex flex-col justify-center items-center w-2/5 h-11/12 border-1 border-solid border-white text-white gap-y-10"
+        className="flex flex-col justify-center items-center w-2/5 max-xl:w-3/5 max-lg:w-4/5 h-11/12 border-1 border-solid border-white text-white gap-y-10"
         onSubmit={handleSubmit}
       >
         {children}
