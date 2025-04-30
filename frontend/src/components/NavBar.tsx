@@ -1,3 +1,4 @@
+import { Menu } from "@/assets/icons/Menu";
 import default_image from "@/assets/images/default_profile.webp";
 import { useAuth } from "@/context/AuthProvider";
 import { useEffect, useState } from "react";
@@ -8,6 +9,7 @@ import { LoggedMenu } from "./LoggedMenu";
 
 export const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [showMenuIcon, setShowMenuIcon] = useState<boolean>(false);
   const [profileImage, setProfileImage] = useState<string>(default_image);
   const navigate = useNavigate();
   const {
@@ -28,6 +30,16 @@ export const NavBar = () => {
         : default_image,
     );
   }, [isRegistered]);
+
+  useEffect(() => {
+    const checkWidth = () => {
+      setShowMenuIcon(window.innerWidth <= 1021);
+    };
+
+    checkWidth();
+    window.addEventListener("resize", checkWidth);
+    return () => window.removeEventListener("resize", checkWidth);
+  }, []);
 
   const navigateToPath = (path: string) => {
     navigate(path);
@@ -63,54 +75,78 @@ export const NavBar = () => {
       >
         [PokemonVotingDapp]
       </h1>
-      <ul className="flex gap-2 text-lg">
-        {menuOptions.map((option, index) => {
-          if (option.onlyOwner && !isOwner) {
-            return null;
-          }
 
-          return (
-            <li
-              key={index}
-              className="cursor-pointer hover:scale-105 transition-transform duration-500"
-              onClick={option.onClick}
-            >
-              {option.name}
-            </li>
-          );
-        })}
-      </ul>
-      {isReady ? (
-        <div className="flex justify-end w-96">
-          {isConnected ? (
-            <>
-              <ImageProfile
-                imageUrl={profileImage}
-                imageAlt={`${voterData?.name} profile image`}
-                className="w-16 h-16 cursor-pointer rounded-full hover:scale-105 duration-300 transform"
-                onClick={() => setIsMenuOpen(true)}
-              />
-              <LoggedMenu
-                address={address as string}
-                isOpen={isMenuOpen}
-                onClose={() => setIsMenuOpen(false)}
-                disconnect={() => {
-                  disconnect();
-                  setIsMenuOpen(false);
-                }}
-              />
-            </>
-          ) : (
-            <Button
-              text="Connect Wallet"
-              type="button"
-              className="bg-primary border-1 border-solid border-white hover:bg-light-primary p-4"
-              onClick={connect}
-            />
-          )}
-        </div>
+      {showMenuIcon ? (
+        <>
+          <Menu onClick={() => setIsMenuOpen(true)} />
+          <LoggedMenu
+            isMenuIconOn={showMenuIcon}
+            address={address as string}
+            isOpen={isMenuOpen}
+            isOwner={isOwner}
+            onClose={() => setIsMenuOpen(false)}
+            connect={connect}
+            disconnect={() => {
+              disconnect();
+              setIsMenuOpen(false);
+            }}
+          />
+        </>
       ) : (
-        <div className="w-96" />
+        <>
+          <ul className="flex gap-2 text-lg">
+            {menuOptions.map((option, index) => {
+              if (option.onlyOwner && !isOwner) {
+                return null;
+              }
+
+              return (
+                <li
+                  key={index}
+                  className="cursor-pointer hover:scale-105 transition-transform duration-500"
+                  onClick={option.onClick}
+                >
+                  {option.name}
+                </li>
+              );
+            })}
+          </ul>
+          {isReady ? (
+            <div className="flex justify-end w-96">
+              {isConnected ? (
+                <>
+                  <ImageProfile
+                    imageUrl={profileImage}
+                    imageAlt={`${voterData?.name} profile image`}
+                    className="w-16 h-16 cursor-pointer rounded-full hover:scale-105 duration-300 transform"
+                    onClick={() => setIsMenuOpen(true)}
+                  />
+                  <LoggedMenu
+                    isMenuIconOn={showMenuIcon}
+                    address={address as string}
+                    isOpen={isMenuOpen}
+                    isOwner={isOwner}
+                    onClose={() => setIsMenuOpen(false)}
+                    connect={connect}
+                    disconnect={() => {
+                      disconnect();
+                      setIsMenuOpen(false);
+                    }}
+                  />
+                </>
+              ) : (
+                <Button
+                  text="Connect Wallet"
+                  type="button"
+                  className="bg-primary border-1 border-solid border-white hover:bg-light-primary p-4"
+                  onClick={connect}
+                />
+              )}
+            </div>
+          ) : (
+            <div className="w-96" />
+          )}
+        </>
       )}
     </div>
   );
