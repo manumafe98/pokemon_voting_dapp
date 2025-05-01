@@ -43,7 +43,9 @@ export const LoggedMenu = ({
   return (
     <div
       className={`fixed top-0 right-0 ${
-        isMenuIconOn ? "w-2/4 max-lg:w-3/4 max-md:w-full" : "w-1/4 max-[1905px]:w-2/4"
+        isMenuIconOn
+          ? "w-2/4 max-lg:w-3/4 max-md:w-full"
+          : "w-1/4 max-[1905px]:w-2/4"
       } h-screen p-4 bg-background border-l-1 border-solid border-white ${
         isOpen ? "translate-x-0" : "translate-x-full"
       } transition-transform  ease-in-out duration-500 z-1`}

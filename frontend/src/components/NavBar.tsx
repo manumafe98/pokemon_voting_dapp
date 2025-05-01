@@ -28,25 +28,25 @@ export const NavBar = () => {
   } = useAuth();
   const navigate = useNavigate();
 
-useEffect(() => {
-  const refreshUserData = async () => {
-    if (isRegistered && voterData?.ipfsHash) {
-      setProfileImage(
-        `${import.meta.env.PINATA_GATEWAY}/ipfs/${voterData.ipfsHash}`,
-      );
-    } else {
-      setProfileImage(default_image);
-    }
+  useEffect(() => {
+    const refreshUserData = async () => {
+      if (isRegistered && voterData?.ipfsHash) {
+        setProfileImage(
+          `${import.meta.env.PINATA_GATEWAY}/ipfs/${voterData.ipfsHash}`,
+        );
+      } else {
+        setProfileImage(default_image);
+      }
 
-    if (voterData?.hasVoted && voterData?.vote) {
-      const name = (await getPokemonById(voterData.vote)).name;
-      setPokemonName(name);
-    }
-  };
+      if (voterData?.hasVoted && voterData?.vote) {
+        const name = (await getPokemonById(voterData.vote)).name;
+        setPokemonName(name);
+      }
+    };
 
-  refreshUserData();
-}, [isMenuOpen, isRegistered, voterData]);
-  
+    refreshUserData();
+  }, [isMenuOpen, isRegistered, voterData]);
+
   const LoggedMenuWrapper = () => (
     <LoggedMenu
       isMenuIconOn={showMenuIcon}

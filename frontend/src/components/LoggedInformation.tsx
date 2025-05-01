@@ -1,7 +1,7 @@
 import { Copy } from "@/assets/icons/Copy";
+import { Button } from "./Button";
 import { ImageProfile } from "./ImageProfile";
 import { VoterInformation } from "./VoterInformation";
-import { Button } from "./Button";
 
 interface LoggedInformationProps {
   imageUrl: string;

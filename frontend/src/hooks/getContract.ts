@@ -7,5 +7,5 @@ export const getContract = (runner?: ContractRunner) => {
   if (!runner) {
     runner = getProvider();
   }
-  return new Contract(config[31337].PokemonVotingDapp.address, abi, runner);
+  return new Contract(config[11155111].PokemonVotingDapp.address, abi, runner);
 };
