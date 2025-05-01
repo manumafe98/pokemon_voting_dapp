@@ -8,7 +8,8 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   define: {
     "import.meta.env.PINATA_JWT": JSON.stringify(process.env.PINATA_JWT),
-    "import.meta.env.PINATA_GATEWAY": JSON.stringify(process.env.PINATA_GATEWAY)
+    "import.meta.env.PINATA_GATEWAY": JSON.stringify(process.env.PINATA_GATEWAY),
+    "import.meta.env.RPC_URL": JSON.stringify(process.env.RPC_URL)
   },
   resolve: {
     alias: {

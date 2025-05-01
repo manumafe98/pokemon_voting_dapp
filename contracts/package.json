@@ -1,6 +1,7 @@
 {
   "name": "hardhat-project",
   "devDependencies": {
+    "@nomicfoundation/hardhat-ignition-ethers": "^0.15.11",
     "@nomiclabs/hardhat-etherscan": "^3.1.8",
     "dotenv": "^16.5.0",
     "hardhat": "^2.22.19"

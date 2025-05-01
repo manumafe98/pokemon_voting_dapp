@@ -11,7 +11,6 @@
     "hardhat:clean": "cd contracts && npx hardhat clean",
     "hardhat:typechain": "cd contracts && npx hardhat typechain",
     "hardhat:deploy": "cd contracts && npx hardhat ignition deploy ignition/modules/PokemonVotingDapp.ts",
-    "hardhat:deploy:reset": "cd contracts && npx hardhat ignition deploy --reset ignition/modules/PokemonVotingDapp.ts --network sepolia",
     "hardhat:verify": "cd contracts && npx hardhat verify",
     "frontend:dev": "cd frontend && npm run dev",
     "frontend:build": "cd frontend && npm run build",

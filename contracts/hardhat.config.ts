@@ -1,4 +1,5 @@
 import { HardhatUserConfig } from "hardhat/config";
+import "@nomicfoundation/hardhat-ignition-ethers";
 import "@nomiclabs/hardhat-etherscan";
 import * as dotenv from "dotenv";
 
@@ -10,7 +11,6 @@ const config: HardhatUserConfig = {
   solidity: "0.8.28",
   defaultNetwork: "localhost",
   networks: {
-    hardhat: {},
     sepolia: {
       url: SEPOLIA_RPC_URL,
       accounts: [`0x${PRIVATE_KEY}`]

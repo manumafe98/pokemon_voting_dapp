@@ -1,15 +1,9 @@
-import { BrowserProvider, Eip1193Provider, ethers } from "ethers";
+import { BrowserProvider, JsonRpcProvider } from "ethers";
 
 export const getProvider = () => {
-  let provider = null;
-
-  if (window.ethereum == null) {
-    provider = ethers.getDefaultProvider();
-  } else {
-    provider = new BrowserProvider(
-      window.ethereum as unknown as Eip1193Provider,
-    );
+  if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
+    return new BrowserProvider(window.ethereum);
   }
 
-  return provider;
+  return new JsonRpcProvider(import.meta.env.RPC_URL);
 };
