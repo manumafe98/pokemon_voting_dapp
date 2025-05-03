@@ -29,6 +29,19 @@ describe("PokemonVotingDapp", () => {
     });
   });
 
+  describe("Test not owner tries to create pokemon", () => {
+    it("Not owner tries to create pokemon", async () => {
+      expect(
+        pokemonVotingDapp
+          .connect(buyer)
+          .createPokemon(POKEMON_NAME, POKEMON_IPFS_HASH),
+      ).to.be.revertedWithCustomError(
+        pokemonVotingDapp,
+        "PokemonVotingDapp__NotOwner",
+      );
+    });
+  });
+
   describe("Test Pokemon tasks", () => {
     let pokemonTransaction: ContractTransactionResponse;
 

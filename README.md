@@ -2,7 +2,7 @@
 
 A decentralized application (DApp) built on the Sepolia Ethereum testnet that allows users to vote for their favorite Pokémon! Users register with their wallet, name, and a profile image (IPFS hash), and can cast **one vote** for any Pokémon in the list. The DApp includes admin features for the contract owner to add new Pokémon with their image and name.
 
-🔗 **Deployed Contract on Sepolia**: [0x7930bc98156049DBdF30Ba03a4968263568B5629](https://sepolia.etherscan.io/address/0x7930bc98156049DBdF30Ba03a4968263568B5629#code)
+🔗 **Deployed Contract on Sepolia**: [0x7772d78e7A9B1E69Bb8d50250550c83E591B77Eb](https://sepolia.etherscan.io/address/0x7772d78e7A9B1E69Bb8d50250550c83E591B77Eb#code)
 
 ---
 

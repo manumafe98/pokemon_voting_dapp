@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.28;
 
+error PokemonVotingDapp__NotOwner();
 error PokemonVotingDapp__VoterAlreadyRegistered();
 error PokemonVotingDapp__PleaseRegisterAWalletYouOwn();
 error PokemonVotingDapp__YouAlreadyVoted();
@@ -50,7 +51,9 @@ contract PokemonVotingDapp {
     mapping(address => bool) private isRegistered;
 
     modifier onlyOwner() {
-        require(msg.sender == i_owner);
+        if (msg.sender != i_owner) {
+            revert PokemonVotingDapp__NotOwner();
+        }
         _;
     }
 

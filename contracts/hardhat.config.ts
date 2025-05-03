@@ -1,7 +1,6 @@
-import { HardhatUserConfig } from "hardhat/config";
-import "@nomicfoundation/hardhat-ignition-ethers";
-import "@nomiclabs/hardhat-etherscan";
+import "@nomicfoundation/hardhat-toolbox";
 import * as dotenv from "dotenv";
+import { HardhatUserConfig } from "hardhat/config";
 
 dotenv.config();
 
@@ -13,12 +12,12 @@ const config: HardhatUserConfig = {
   networks: {
     sepolia: {
       url: SEPOLIA_RPC_URL,
-      accounts: [`0x${PRIVATE_KEY}`]
-    }
+      accounts: [`0x${PRIVATE_KEY}`],
+    },
   },
   etherscan: {
-    apiKey: ETHERSCAN_API_KEY
-  }
+    apiKey: ETHERSCAN_API_KEY,
+  },
 };
 
 export default config;
